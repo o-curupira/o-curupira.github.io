@@ -36,7 +36,7 @@ var loadingScreen = new customLoadingScreen();
 var delayCreateScene = function () {
 	var scene = new BABYLON.Scene(engine);
 		scene.createDefaultCamera(true, true, true);
-		BABYLON.SceneLoader.ImportMesh("", "arquivos/", "monoculo.glb", scene,
+		BABYLON.SceneLoader.ImportMesh("", "arquivos/", "monóculo.glb", scene,
 		function () {
 			scene.createDefaultCamera(true, true, true);
 			scene.activeCamera.alpha = Math.PI / 2;
