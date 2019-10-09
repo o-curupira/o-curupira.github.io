@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html><head>    <title>custom loading screen</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="scripts/pep.min.js"></script>
+	<script src="scripts/babylon.js"></script>
+	<script src="scripts/babylonjs.loaders.js"></script>
+
+<style>
+html, body {overflow: hidden; width: 100%; height: 100%; margin: 0; padding: 0; }
+#renderCanvas {width: 100%; height: 100%; touch-action: none; }
+#loadingScreen {position: absolute; width: 100%; height: 100%; color: white; font-size: 50px; text-align: center; background-color: #BB464Bcc; z-index: 9999; }
+</style>
+
+</head><body>
+
+<div id="loadingScreen">default div text</div>
+<canvas id="renderCanvas"></canvas>
+
+<script>
+var canvas = document.getElementById("renderCanvas");
+var engine = new BABYLON.Engine(canvas, true);
+var loadingScreenDiv = window.document.getElementById("loadingScreen");
+
+function customLoadingScreen() {
+	console.log("customLoadingScreen creation") }
+	customLoadingScreen.prototype.displayLoadingUI = function () {
+		console.log("customLoadingScreen loading")
+		loadingScreenDiv.innerHTML = "carregando..."; };
+	customLoadingScreen.prototype.hideLoadingUI = function () {
+		console.log("customLoadingScreen loaded")
+		loadingScreenDiv.style.display = "none"; };
+var loadingScreen = new customLoadingScreen();
+	engine.loadingScreen = loadingScreen;
+	engine.displayLoadingUI();
+
+var delayCreateScene = function () {
+	var scene = new BABYLON.Scene(engine);
+		scene.createDefaultCamera(true, true, true);
+		BABYLON.SceneLoader.ImportMesh("", "gltf_files/", "eustaquio5.glb", scene,
+		function () {
+			scene.createDefaultCamera(true, true, true);
+			scene.activeCamera.alpha = Math.PI / 2;
+			engine.hideLoadingUI(); });
+		return scene; };
+
+	var scene = delayCreateScene();
+		engine.runRenderLoop(function () {
+		if (scene) {
+			scene.render(); } });
+		window.addEventListener("resize", function () {
+		engine.resize(); });
+
+	//Light direction is up and left
+	var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(0, 1, 0), scene);
+	light.setEnabled(true);
+	light.intensity = 2;
+
+var skybox = BABYLON.Mesh.CreateBox("skyBox", 100.0, scene);
+var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+skyboxMaterial.backFaceCulling = false;
+skyboxMaterial.disableLighting = true;
+skybox.material = skyboxMaterial;
+skybox.infiniteDistance = true;
+skyboxMaterial.disableLighting = true;
+skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("skybox/skybox", scene);
+skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+
+
+</script>
+
+</body></html>
